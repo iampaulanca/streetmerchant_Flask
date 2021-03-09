@@ -141,14 +141,26 @@ def hello_world():
     return "hello world"
 
 
+@app.route('/getConfig', methods=['GET'])
+def get_config():
+    os.system(f'python3 getConfig.py')
+    return "hello world"
+
+
 @app.route('/updateConfig', methods=['POST'])
 def update_config():
     if request.method == 'POST':
         data = request.json
-    os.system(f'python3 {configUpdate_dir} "{data}"')
-    os.system(f"kill - 9 $(pgrep - f 'streetmerchant'")
+    os.system(f'python3 configUpdate.py "{data}"')
+    os.system(f"kill -9 $(pgrep -f '{streetmerchant_dir}')")
     subprocess.Popen(["npm", "start"], cwd=f"{streetmerchant_dir}", stdout=subprocess.DEVNULL)
     return jsonify(data)
+
+
+@app.route('/killScript', methods=['GET'])
+def kill_script():
+    os.system(f"kill -9 $(pgrep -f '{streetmerchant_dir}')")
+    return "Street merchant has been murdered"
 
 
 if __name__ == '__main__':
