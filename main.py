@@ -1,8 +1,11 @@
 from flask import Flask, request, jsonify
 import os
 import subprocess
+import config
 
 app = Flask(__name__)
+
+app.config['SECRET_KEY'] = config.secret_key
 
 streetmerchant_dir = "/Users/paulancajima/Desktop/streetmerchant"
 # ps aux | grep {streetmerchant_dir}
@@ -56,7 +59,7 @@ def update_config():
     f.close()
 
     # kill existing streetmerchant script
-    os.system(f"kill -9 $(pgrep -f '{streetmerchant_dir}')")
+    os.system(f"kill -9 $(pgrep -f {streetmerchant_dir})")
 
     # start new script
     subprocess.Popen(["npm", "start"], cwd=f"{streetmerchant_dir}", stdout=subprocess.DEVNULL)
@@ -67,7 +70,7 @@ def update_config():
 @app.route('/killScript', methods=['GET'])
 def kill_script():
     # kill streetmerchant script
-    os.system(f"kill -9 $(pgrep -f '{streetmerchant_dir}')")
+    os.system(f"kill -9 $(pgrep -f {streetmerchant_dir})")
     return "Street merchant has been murdered"
 
 
